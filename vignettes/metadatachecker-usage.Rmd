@@ -1,0 +1,63 @@
+---
+title: "metadatachecker-usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{metadatachecker-usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+RWE-metadatachecker is a library that aims to provide a means to check the inconsistency between meta data files used RWE-pipeline projects. The check could be done either launching a shiny app or using a stand-alone function ("check_study_variables") available in the library.
+
+Here is a basic usage example of metadatachecker:
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+First, import the library:
+
+```{r setup}
+library(metadatachecker)
+```
+
+Then, write the following on the R console:
+
+
+metadatachecker_app()
+
+
+A Shiny app will launch in a new window or in your default browser (if you set it as "Run External" from the menu next to "Run app"). 
+
+In the app:
+
+- First tab is for comparing study variables "VarName" with the variables names resulting from the combination of events/drugs/vaccines/algorithms(NEWCONCEPT)/additional concepts. The aim is to check the consistency of the study variables file. 
+You need to select and upload the correct files (no error checking is performed yet). After pressing "Check consistency" button, a data table will appear and its final column will show the variables that are not present in the combined file.
+
+- Second tab is for comparing any metadata file's selected column with study variables' "VarName" column. This is to check the consistency of meta data files with study variables file. After selecting the column name of the meta data file, a data table will appear and its final column will show the variables that are not present in the study variables file. Again, an error check for file selection is not performed yet (too much trust in user :P)
+
+- Third tab is for generating an html report for all the comparison performed in first and second tabs. The results are combined and a downloadable html file is generated. Last selected column is taken into account for the same meta data file.
+
+It is also possible to use check_study_variables function to compare two files, without launching the shiny app. For example:
+
+```{r check_study_vars}
+library(metadatachecker)
+ref_filepath <- system.file("extdata",
+                            "combined_codelist_drugs_vaccines_algo_additional.csv",
+                            package = "metadatachecker")
+ref_colname <- "codenames"
+meta_filpath <- system.file("extdata",
+                            "Pfizer_study_variables.csv",
+                            package = "metadatachecker")
+meta_colname <- "VarName"
+results <- check_study_variables(ref_filepath,
+                                 ref_colname,
+                                 meta_filpath,
+                                 meta_colname)
+print(results)
+```
+
+It will return a list of variables that are present in "Pfizer_study_variables.csv", but not present in the reference file (combined_codelist_drugs_vaccines_algo_additional.csv). The function can be used to compare a meta data file against study variables file ("reference") for example.

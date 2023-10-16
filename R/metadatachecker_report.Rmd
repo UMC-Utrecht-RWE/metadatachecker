@@ -1,0 +1,62 @@
+---
+title: "Meta data check report"
+author: "RWE-metadatachecker"
+date: "`r format(Sys.time(), format = '%Y-%m-%d T %H:%M:%S')`"
+output: html_document
+params: 
+    output_dir: NULL
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This documents reports the results of meta data check for:
+
+- Study variables (VarName) vs event/drug/vaccine/additional concepts/algorithm(NEWCONCEPT) codes
+- Other meta data files vs study variables (VarName)
+
+## Results
+
+The variables listed in "variable name" column are not found in the reference file
+```{r display_results, echo=FALSE}
+if (!is.null(params$output_dir)){
+  # Read and combine results from output directory
+  list_of_files <- list.files(params$output_dir)
+  results_files <- list_of_files[grep("results.csv",list_of_files)]
+
+  if (length(results_files) != 0){
+    final_table <- read.csv(paste(params$output_dir, results_files[1], sep = "/"),
+                            stringsAsFactors = F,
+                            na.strings = c(""))
+    final_table$variable_name[is.na(final_table$variable_name)] <- "OK: All consistent"
+    final_table$variable_name <- gsub("\t","<br>",final_table$variable_name)
+    
+    if (length(results_files)>1){
+        for (i in c(2:length(results_files))){
+          tt <- read.csv(paste(params$output_dir, results_files[i], sep = "/"),
+                         stringsAsFactors = F,
+                         na.strings = c(""))
+          tt$variable_name[is.na(tt$variable_name)] <- "OK: All consistent"
+          tt$variable_name <- gsub("\t","<br>",tt$variable_name)
+          final_table <- rbind(final_table,tt)
+        }
+    }
+    x_html <- kableExtra::kable(
+        final_table,
+        format = "html",
+        col.names = c("metadata file", "column to check", "variable name"),
+        escape = FALSE
+        )
+    kableExtra::kable_styling(x_html, 
+                    bootstrap_options = "bordered",
+                    full_width = FALSE)
+  }
+  
+}
+
+
+
+```
+
