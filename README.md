@@ -12,7 +12,7 @@ You can install the development version of metadatachecker like so:
 
 1. Using devtools
 
-Download or clone the repo to the "directory of the package" and:
+Download or clone the repo and:
 ``` r
 # If you don't have devtools, install it
 install.packages("devtools")
