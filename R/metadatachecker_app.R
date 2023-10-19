@@ -8,7 +8,9 @@
 #'
 
 metadatachecker_app <- function(...) {
+  # File upload size is increased
   options(shiny.maxRequestSize = 100 * 1024^2)
+  # temp directory for results
   output_directory <- tempdir()
   ui <- shiny::fluidPage(
     theme = shinythemes::shinytheme("cerulean"),
@@ -104,6 +106,7 @@ metadatachecker_app <- function(...) {
                                      data.frame(codenames = additional_concepts$StudyVar,
                                                 source = input$additional_concepts_file$datapath)
       )
+      # Read study variables
       study_variables <- utils::read.csv(input$study_variables_file$datapath,
                                   stringsAsFactors = F,
                                   na.strings = c(""," ","NA","NULL"),
@@ -116,11 +119,11 @@ metadatachecker_app <- function(...) {
                                                sep = "/"), row.names = F,
                   quote = F, sep = ";")
 
-      #Pfizer study variables
+      #Study variables
       study_vars_reference = input$study_variables_file$datapath
       reference_colname = "VarName"
 
-      # Log file for Pfizer study variables
+      # Study variables
       pfizer_study_var_check <- check_study_variables(paste(output_directory,
                                                             "combined_codelist_drugs_vaccines_algo_additional.csv",
                                                             sep = "/"),
@@ -212,8 +215,13 @@ metadatachecker_app <- function(...) {
     output$report <- shiny::downloadHandler(
       filename <-  "metadatachecker_report.html",
       content = function(file) {
-        tempReport <- file.path(tempdir(), "metadatachecker_report.Rmd")
-        file.copy("R/metadatachecker_report.Rmd", tempReport, overwrite = TRUE)
+        tempReport <- file.path(output_directory, 
+                                "metadatachecker_report.Rmd")
+        file.copy(system.file("rmd",
+                              "metadatachecker_report.Rmd",
+                              package = "metadatachecker"),
+                  tempReport, 
+                  overwrite = TRUE)
         params <- list(output_dir = output_directory)
         rmarkdown::render(tempReport, output_file = file,
                           params = params,
