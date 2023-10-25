@@ -10,7 +10,7 @@ RWE-metadatachecker is an R package with a Shiny app for meta data file comparis
 
 You can install the development version of metadatachecker like so:
 
-1. Using devtools
+Option 1. Using devtools
 
 Download or clone the repo and:
 ``` r
@@ -20,7 +20,7 @@ install.packages("devtools")
 devtools::install("<directory of the package>", dependencies = TRUE, build_vignettes = T)
 ```
 
-2. Building from source:
+Option 2. Building from source:
 
 Download or clone the repo, then open RStudio>Open Project, select metedatachecker folder. 
 From top right panel of RStudio, select "Build" tab and press Install. If you encounter with
