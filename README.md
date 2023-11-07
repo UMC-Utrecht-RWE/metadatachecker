@@ -12,12 +12,12 @@ You can install the development version of metadatachecker like so:
 
 **Option 1.** Using devtools (recommended):
 
-Download or clone the repo and:
+Download and unzip (in your working enviroment) or clone the repo and:
 ``` r
 # If you don't have devtools, install it
 install.packages("devtools")
 #Install metadatachecker (with vignettes) by typing this on R console
-devtools::install("<directory of the package>", dependencies = TRUE, build_vignettes = T)
+devtools::install("<path to the directory of the package>", dependencies = TRUE, build_vignettes = T)
 ```
 
 **Option 2.** Building from source:
