@@ -32,7 +32,7 @@ needed libraries for metadatachecker:
 - rmarkdown (>= 2.23),
 - shiny (>= 1.7.5),
 - shinythemes (>= 1.2.0)
-
+- shinyvalidate (>= 0.1.3)
 
 ## Example
 
@@ -53,9 +53,16 @@ A Shiny app will launch in a new window or in your default browser (if you set i
 In the app:
 
 - First tab is for comparing study variables "VarName" with the variables names resulting from the combination of events/drugs/vaccines/algorithms(NEWCONCEPT)/additional concepts. The aim is to check the consistency of the study variables file. 
-You need to select and upload the correct files (no error checking is performed yet). After pressing "Check consistency" button, a data table will appear and its final column will show the variables that are not present in the combined file.
+You need to select and upload the correct files. After pressing "Check consistency" button:
 
-- Second tab is for comparing any metadata file's selected column with study variables' "VarName" column. This is to check the consistency of meta data files with study variables file. After selecting the column name of the meta data file, a data table will appear and its final column will show the variables that are not present in the study variables file. Again, an error check for file selection is not performed yet (too much trust in user :P)
+- If uploaded files are in the expected format, an error message 
+will appear. You need to upload teh correct file with expected delimiter and column names.
+After uploading the correct file(s), press on the button again.
+
+- If the files are in correct format, a data table will appear and its final column 
+will show the variables that are not present in the combined file.
+
+- Second tab is for comparing any metadata file's selected column with study variables' "VarName" column. This is to check the consistency of meta data files with study variables file. After selecting the column name of the meta data file, a data table will appear and its final column will show the variables that are not present in the study variables file. Here, an error check for file selection is not performed yet (too much trust in user :P), and if the files are in wrong format, the app will crash.
 
 - Third tab is for generating an html report for all the comparison performed in first and second tabs. The results are combined and a downloadable html file is generated. Last selected column is taken into account for the same meta data file.
 

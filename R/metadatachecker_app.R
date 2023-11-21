@@ -80,8 +80,10 @@ metadatachecker_app <- function(...) {
     )
 
   server <- function(input, output, session) {
+    
     # Study variables vs events, drugs, vaccines, additional concepts, algorithms codelists
     shiny::observeEvent(input$Go, {
+
       events <- utils::read.csv(input$event_codelist$datapath, stringsAsFactors = F,
                          na.strings = c(""," ","NA"))
       drugs <- utils::read.csv(input$drug_codelist$datapath, stringsAsFactors = F,
@@ -92,69 +94,108 @@ metadatachecker_app <- function(...) {
                              na.strings = c(""," ","NA"), sep = ";")
       additional_concepts <- utils::read.csv(input$additional_concepts_file$datapath, stringsAsFactors = F,
                                       na.strings = c(""," ","NA"), sep = ";")
-      # Combine all sources of study variables
-      initial_reference_set <- rbind(data.frame(codenames = paste(events$system,
-                                                                  events$event_abbreviation,
-                                                                  events$type, sep = "_"),
-                                                source = input$event_codelist$datapath),
-                                     data.frame(codenames = drugs$drug_abbreviation,
-                                                source = input$drug_codelist$datapath),
-                                     data.frame(codenames = vaccines$StudyVar,
-                                                source = input$vaccines_file$datapath),
-                                     data.frame(codenames = algorithms$NEW_CONCEPT,
-                                                source = input$algorithms_file$datapath),
-                                     data.frame(codenames = additional_concepts$StudyVar,
-                                                source = input$additional_concepts_file$datapath)
-      )
       # Read study variables
       study_variables <- utils::read.csv(input$study_variables_file$datapath,
-                                  stringsAsFactors = F,
-                                  na.strings = c(""," ","NA","NULL"),
-                                  strip.white = T,
-                                  sep = ";")
+                                         stringsAsFactors = F,
+                                         na.strings = c(""," ","NA","NULL"),
+                                         strip.white = T,
+                                         sep = ";")
+      
+      #Input validation
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("study_variables_file",
+                  ~ if (!all(c("VarName") %in% colnames(study_variables)))
+                    'VarName column is not present in study variables file,
+                    please check the format and the delimiter (should be ";")')
+      iv$add_rule("event_codelist", 
+                  ~ if (!all(c("system","event_abbreviation","type") %in% 
+                                colnames(events))) 
+                  'system, event_abbreviation or type column(s) is(are) 
+                  not present in events codelist,
+                  please check the format and the delimiter (should be ",")')
+      iv$add_rule("drug_codelist", 
+                  ~ if (!all(c("drug_abbreviation") %in% colnames(drugs)))
+                    'drug_abbreviation column is not present in drugs codelist,
+                    please check the format and the delimiter (should be ",")')
+      iv$add_rule("vaccines_file",
+                  ~ if (!all(c("StudyVar") %in% colnames(vaccines)))
+                    'StudyVar column is not present vaccines codelist,
+                    please check the format and the delimiter (should be ";")')
+      iv$add_rule("algorithms_file",
+                  ~ if (!all(c("NEW_CONCEPT") %in% colnames(algorithms)))
+                    'NEW_CONCEPT column is not present algorithms file,
+                    please check the format and the delimiter (should be ";")')
+      iv$add_rule("additional_concepts_file",
+                  ~ if (!all(c("StudyVar") %in% colnames(additional_concepts)))
+                    'StudyVar column is not present additional concepts file,
+                    please check the format and the delimiter (should be ";")')
+      
+      iv$enable()
 
-      # Save the initial_reference_set
-      utils::write.table(initial_reference_set, paste(output_directory,
-                                               "combined_codelist_drugs_vaccines_algo_additional.csv",
-                                               sep = "/"), row.names = F,
-                  quote = F, sep = ";")
-
-      #Study variables
-      study_vars_reference = input$study_variables_file$datapath
-      reference_colname = "VarName"
-
-      # Study variables
-      pfizer_study_var_check <- check_study_variables(paste(output_directory,
-                                                            "combined_codelist_drugs_vaccines_algo_additional.csv",
-                                                            sep = "/"),
-                                                      "codenames",
-                                                      study_vars_reference,
-                                                      reference_colname)
-
-      # Results table to display
-      results_table <- data.frame(metadata_file = input$study_variables_file$name,
-                                  column_to_check = reference_colname,
-                                  variable_name = paste(pfizer_study_var_check,
-                                                        collapse = "\t"))
-      if (length(pfizer_study_var_check)>0){
-        output$feedback_text <- shiny::renderText("The variables in variable_name column
+      if (iv$is_valid()) {
+        # Combine all sources of study variables
+        initial_reference_set <- rbind(data.frame(codenames = paste(events$system,
+                                                                    events$event_abbreviation,
+                                                                    events$type, sep = "_"),
+                                                  source = input$event_codelist$datapath),
+                                       data.frame(codenames = drugs$drug_abbreviation,
+                                                  source = input$drug_codelist$datapath),
+                                       data.frame(codenames = vaccines$StudyVar,
+                                                  source = input$vaccines_file$datapath),
+                                       data.frame(codenames = algorithms$NEW_CONCEPT,
+                                                  source = input$algorithms_file$datapath),
+                                       data.frame(codenames = additional_concepts$StudyVar,
+                                                  source = input$additional_concepts_file$datapath)
+        )
+        
+        # Save the initial_reference_set
+        utils::write.table(initial_reference_set, paste(output_directory,
+                                                        "combined_codelist_drugs_vaccines_algo_additional.csv",
+                                                        sep = "/"), row.names = F,
+                           quote = F, sep = ";")
+        
+        #Study variables
+        study_vars_reference = input$study_variables_file$datapath
+        reference_colname = "VarName"
+        
+        # Study variables
+        pfizer_study_var_check <- check_study_variables(paste(output_directory,
+                                                              "combined_codelist_drugs_vaccines_algo_additional.csv",
+                                                              sep = "/"),
+                                                        "codenames",
+                                                        study_vars_reference,
+                                                        reference_colname)
+        
+        # Results table to display
+        results_table <- data.frame(metadata_file = input$study_variables_file$name,
+                                    column_to_check = reference_colname,
+                                    variable_name = paste(pfizer_study_var_check,
+                                                          collapse = "\t"))
+        if (length(pfizer_study_var_check)>0){
+          output$feedback_text <- shiny::renderText("The variables in variable_name column
       are not present in the events/drugs/vaccines/additional
       concepts/algorithms codelists")
-      } else {
-        output$feedback_text <- shiny::renderText("All the variable names in study
+        } else {
+          output$feedback_text <- shiny::renderText("All the variable names in study
                                          variables is consistent with
                                          the events/drugs/vaccines/additional
                                          concepts/algorithms codelists")
+        }
+        output$base_table <- shiny::renderTable({
+          results_table
+        })
+        # Save results table
+        utils::write.table(results_table,
+                           file = paste(output_directory,"study_variables_results.csv", sep = "/"),
+                           row.names = F,
+                           sep = ",")
       }
-      output$base_table <- shiny::renderTable({
-        results_table
-      })
-      # Save results table
-      utils::write.table(results_table,
-                  file = paste(output_directory,"study_variables_results.csv", sep = "/"),
-                  row.names = F,
-                  sep = ",")
-    }
+      else {
+        shiny::showNotification("Please fix the errors", type = "warning")
+      }
+      
+      } 
+
     )
 
     # Display the meta data file and column names after upload
@@ -178,6 +219,7 @@ metadatachecker_app <- function(...) {
       if(input$metafile_column == "No selection available"){
         return()
       }
+
       study_variables <- utils::read.csv(input$study_variables_file_meta$datapath,
                                   stringsAsFactors = F,
                                   na.strings = c(""," ","NA","NULL"),
@@ -229,7 +271,9 @@ metadatachecker_app <- function(...) {
         )
       }
     )
-
+    session$onSessionEnded(function() {
+      shiny::stopApp()
+    })
   }
   shiny::shinyApp(ui, server)
 
