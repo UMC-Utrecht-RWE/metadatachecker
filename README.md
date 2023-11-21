@@ -56,8 +56,8 @@ In the app:
 - First tab is for comparing study variables "VarName" with the variables names resulting from the combination of events/drugs/vaccines/algorithms(NEWCONCEPT)/additional concepts. The aim is to check the consistency of the study variables file. 
 You need to select and upload the correct files. After pressing "Check consistency" button:
 
-  - If uploaded files are in the expected format, an error message 
-will appear. You need to upload teh correct file with expected delimiter and column names.
+  - If uploaded files are not in the expected format, an error message 
+will appear. You need to upload the correct file with expected delimiter and column names.
 After uploading the correct file(s), press on the button again.
 
   - If the files are in correct format, a data table will appear and its final column 
