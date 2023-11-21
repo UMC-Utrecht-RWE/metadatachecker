@@ -8,7 +8,7 @@ RWE-metadatachecker is an R package with a Shiny app for meta data file comparis
 
 ## Installation
 
-You can install the development version of metadatachecker like so:
+You can install the development version of metadatachecker (or the latest stable release) like so:
 
 **Option 1.** Using devtools (recommended):
 
