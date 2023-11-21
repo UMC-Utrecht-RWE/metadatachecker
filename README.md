@@ -12,7 +12,12 @@ You can install the development version of metadatachecker (or the latest stable
 
 **Option 1.** Using devtools (recommended):
 
-Download and unzip (in your working enviroment) or clone the repo and:
+Download and unzip (in your working enviroment) or clone the repo. Let's say your folder is here:
+
+on Mac, the path looks like this: /Users/zkurkcuo/Desktop/metadatachecker
+on Windows the path looks like this: C:/Users/zkurkcuo/Desktop/metadatachecker (slash should be "/", and not "\")
+
+and on the R console, type the following:
 ``` r
 # If you don't have devtools, install it
 install.packages("devtools")
@@ -21,7 +26,7 @@ devtools::install("<path to the directory of the package>", dependencies = TRUE,
 ```
 If it asks about updating the packages that are available in your system, I usually skip it and hope that I won't break anything. So far it worked, but please check it.
 
-**Option 2.** Building from source:
+**Option 2.** Building from source (not recommendend, but if you really have to, then it is in the following way):
 
 Download or clone the repo, then open RStudio>Open Project, select metedatachecker folder. 
 From top right panel of RStudio, select "Build" tab and press Install. If you encounter with
@@ -37,8 +42,10 @@ needed libraries for metadatachecker:
 
 ## Example
 
-Here is how you can use metadatachecker
+Here is how you can use metadatachecker: 
 
+
+On R console, type the following:
 ``` r
 library(metadatachecker)
 ```
