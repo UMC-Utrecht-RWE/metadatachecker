@@ -14,15 +14,15 @@ You can install the development version of metadatachecker (or the latest stable
 
 Download and unzip (in your working enviroment) or clone the repo. Let's say your folder is here:
 
-on Mac, the path looks like this: /Users/zkurkcuo/Desktop/metadatachecker
-on Windows the path looks like this: C:/Users/zkurkcuo/Desktop/metadatachecker (slash should be "/", and not "\")
+- on Mac, the *"path_to_the_directory_of_the_package"* looks something like this: "/Users/zkurkcuo/Desktop/metadatachecker"
+- on Windows, the *"path_to_the_directory_of_the_package"* looks something like this: "C:/Users/zkurkcuo/Desktop/metadatachecker" (it should be **"/"**, and not "\\")
 
-and on the R console, type the following:
+and on R console, type the following:
 ``` r
 # If you don't have devtools, install it
 install.packages("devtools")
 #Install metadatachecker (with vignettes) by typing this on R console
-devtools::install("<path to the directory of the package>", dependencies = TRUE, build_vignettes = T)
+devtools::install("path_to_the_directory_of_the_package", dependencies = TRUE, build_vignettes = T)
 ```
 If it asks about updating the packages that are available in your system, I usually skip it and hope that I won't break anything. So far it worked, but please check it.
 
