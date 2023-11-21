@@ -56,11 +56,11 @@ In the app:
 - First tab is for comparing study variables "VarName" with the variables names resulting from the combination of events/drugs/vaccines/algorithms(NEWCONCEPT)/additional concepts. The aim is to check the consistency of the study variables file. 
 You need to select and upload the correct files. After pressing "Check consistency" button:
 
-- If uploaded files are in the expected format, an error message 
+  - If uploaded files are in the expected format, an error message 
 will appear. You need to upload teh correct file with expected delimiter and column names.
 After uploading the correct file(s), press on the button again.
 
-- If the files are in correct format, a data table will appear and its final column 
+  - If the files are in correct format, a data table will appear and its final column 
 will show the variables that are not present in the combined file.
 
 - Second tab is for comparing any metadata file's selected column with study variables' "VarName" column. This is to check the consistency of meta data files with study variables file. After selecting the column name of the meta data file, a data table will appear and its final column will show the variables that are not present in the study variables file. Here, an error check for file selection is not performed yet (too much trust in user :P), and if the files are in wrong format, the app will crash.
