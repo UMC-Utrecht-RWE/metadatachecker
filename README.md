@@ -19,6 +19,7 @@ install.packages("devtools")
 #Install metadatachecker (with vignettes) by typing this on R console
 devtools::install("<path to the directory of the package>", dependencies = TRUE, build_vignettes = T)
 ```
+If it asks about updating the packages that are available in your system, I usually skip it and hope that I won't break anything. So far it worked, but please check it.
 
 **Option 2.** Building from source:
 
